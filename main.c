@@ -63,6 +63,21 @@ int main() {
     // TODO: implement menu and call subprograms for each operation
 
     commandIndex = getCommand(res, commandsList, &size);
-    
+
+    switch (commandIndex)
+    {
+        case 0:
+            // * int numberCards = importCards("cards.csv", cards, 100);
+        break;
+        case 1:
+            
+        break;
+        case 2:
+            return 0;
+        break;
+        default:
+
+        break;
+    }
 }
 

@@ -62,6 +62,7 @@ int main() {
 
     size = sizeof(commandsList) / sizeof(commandsList[0]);
 
+
     interpretCommand:
 
     commandIndex = getCommand(res, commandsList, &size);

@@ -17,7 +17,7 @@ typedef enum {
     REGULAR, 
     LARGE, 
     OTHER_SIZE,
-    VIRTUAL,
+    VIRTUAL_SIZE,
     NOT_CHOSEN
 } Size;
 
@@ -44,3 +44,6 @@ typedef struct cache {
         favourites;
     char altitude[8];
 } Cache; 
+
+Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]);
+int importCaches(char filename[], Cache array[], int maxLength);

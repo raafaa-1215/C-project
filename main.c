@@ -3,6 +3,10 @@
 #include <string.h>
 #include <ctype.h>
 #include "input.h"
+#include "date.h"
+#include "cache.h"
+
+#define MAX_CACHE 2000
 
 void printCommands(char (*commandsList)[10]) {
     printf("\nOs comandos disponiveis sao: \n");
@@ -54,23 +58,75 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 }
 
 int main() {
+    Cache arrayOfCache[MAX_CACHE];
     char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP"},
          res[10],
-         confirmQuit;
+         confirmQuit,
+         fileName[21],
+         uniqueCache[MAX_CACHE][11];
     int size, 
-        commandIndex;
+        commandIndex,
+        numCache = 0,
+        numUniqueCache = 0;
 
     size = sizeof(commandsList) / sizeof(commandsList[0]);
 
-
     interpretCommand:
+
+    fflush(stdin);
 
     commandIndex = getCommand(res, commandsList, &size);
 
     switch (commandIndex)
     {
         case 0:
-            // * int numberCards = importCards("cards.csv", cards, 100);
+            if (arrayOfCache[0].code[0] == '\0')
+            {
+                do
+                {
+                    printf("\nIntroduza o nome do ficheiro: ");
+                    gets(fileName);
+
+                    numCache = importCaches(fileName, arrayOfCache, MAX_CACHE);
+
+                    if (numCache == 0)
+                    {
+                        printf("\n<File not found>\n");
+                    }
+                    else
+                    {
+                        strcpy(uniqueCache[0], arrayOfCache[0].code);
+
+                        for (int i = 0; i < MAX_CACHE; ++i) 
+                        {
+                            int isUnique = 1;
+
+                            for (int j = 0; j < numUniqueCache; ++j) 
+                            {
+                                if (strcmp(arrayOfCache[i].code, uniqueCache[j]) == 0) 
+                                {
+                                    isUnique = 0;
+                                    break;
+                                }
+                            }
+
+                            if (isUnique) 
+                            {
+                                numUniqueCache++;
+                            }
+                        }
+                        
+                        printf("\n<%d unique caches loaded>\n", numUniqueCache);
+
+                        goto interpretCommand;
+                    }
+                } while (1);
+            }
+            else
+            {
+                printf("\n<Cache data exists. Please clear it first.>\n\n");
+                goto interpretCommand;
+            }
         break;
         case 1:
             

@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "input.h"
 #include "date.h"
 #include "cache.h"
+
+#define MAX_CACHE 2000
 
 Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]) {
     Cache cache;
@@ -27,68 +30,68 @@ Cache cacheCreate(char code[], char name[], char state[], char owner[], char lat
     return cache;
 }
 
-int importcaches(char filename[], Cache array[], int maxLength) {
+int importCaches(char filename[], Cache array[], int maxLength) {
 
     FILE* stream = fopen(filename, "r");
 
     int count = 0;
-    char line[2000];
+    char line[MAX_CACHE];
 
-    fgets(line, 2000, stream);
-    while (fgets(line, 2000, stream))
+    fgets(line, MAX_CACHE, stream);
+    while (fgets(line, MAX_CACHE, stream))
     {
         if(count >= maxLength) break;
 
         char* tmp = strdup(line);
         
-        char** tokens = splitString(tmp, 16, ",");
+        char** tokens = splitString(tmp, 16, ";");
         
         Kind kind;
-        switch (*tokens[6])
+        switch (tokens[6][0])
         {
-            case 'EARTHCACHE':
+            case 'E':
                 kind = EARTHCACHE;
             break;
-            case 'LETTERBOX':
+            case 'L':
                 kind = LETTERBOX;
             break;
-            case 'MULTI':
+            case 'M':
                 kind = MULTI;
             break;
-            case 'PUZZLE':
+            case 'P':
                 kind = PUZZLE;
             break;
-            case 'TRADITIONAL':
+            case 'T':
                 kind = TRADITIONAL;
             break;
-            case 'VIRTUAL':
+            case 'V':
                 kind = VIRTUAL;
             break;
-            case 'WEBCAM':
+            case 'W':
                 kind = WEBCAM;
             break;
         }
 
         Size size;
-        switch (*tokens[7])
+        switch (tokens[7][0])
         {
-            case 'MICRO':
+            case 'M':
                 size = MICRO;
             break;
-            case 'SMALL':
+            case 'S':
                 size = SMALL;
             break;
-            case 'REGULAR':
+            case 'R':
                 size = REGULAR;
             break;
-            case 'LARGE':
+            case 'L':
                 size = LARGE;
             break;
-            case 'OTHER_SIZE':
+            case 'O':
                 size = OTHER_SIZE;
             break;
-            case 'VIRTUAL':
-                size = VIRTUAL;
+            case 'V':
+                size = VIRTUAL_SIZE;
             break;
             default:
                 size = NOT_CHOSEN;
@@ -98,7 +101,7 @@ int importcaches(char filename[], Cache array[], int maxLength) {
         float difficulty = atof(tokens[8]);
         int terrain = atof(tokens[9]);
         
-        Status status = (tokens[10] == "AVAILABLE") ? AVAILABLE : DISABLED;
+        Status status = (tokens[10][0] == 'A') ? AVAILABLE : DISABLED;
 
         int day, month, year;
         sscanf(tokens[11], "%d/%d/%d", &year, &month, &day);

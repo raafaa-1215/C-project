@@ -112,5 +112,3 @@ Token[1] = bruno.silva@estsetubal.ips.pt
 Token[2] =  
 Token[3] = 2020/21
 ```
-
-TEST

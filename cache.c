@@ -43,12 +43,72 @@ int importcaches(char filename[], Cache array[], int maxLength) {
         
         char** tokens = splitString(tmp, 16, ",");
         
-        int founds = atoi(tokens[3]);
+        Kind kind;
+        switch (*tokens[6])
+        {
+            case 'EARTHCACHE':
+                kind = EARTHCACHE;
+            break;
+            case 'LETTERBOX':
+                kind = LETTERBOX;
+            break;
+            case 'MULTI':
+                kind = MULTI;
+            break;
+            case 'PUZZLE':
+                kind = PUZZLE;
+            break;
+            case 'TRADITIONAL':
+                kind = TRADITIONAL;
+            break;
+            case 'VIRTUAL':
+                kind = VIRTUAL;
+            break;
+            case 'WEBCAM':
+                kind = WEBCAM;
+            break;
+        }
+
+        Size size;
+        switch (*tokens[7])
+        {
+            case 'MICRO':
+                size = MICRO;
+            break;
+            case 'SMALL':
+                size = SMALL;
+            break;
+            case 'REGULAR':
+                size = REGULAR;
+            break;
+            case 'LARGE':
+                size = LARGE;
+            break;
+            case 'OTHER_SIZE':
+                size = OTHER_SIZE;
+            break;
+            case 'VIRTUAL':
+                size = VIRTUAL;
+            break;
+            default:
+                size = NOT_CHOSEN;
+            break;
+        }
+
+        float difficulty = atof(tokens[8]);
+        int terrain = atof(tokens[9]);
+        
+        Status status = (tokens[10] == "AVAILABLE") ? AVAILABLE : DISABLED;
+
         int day, month, year;
         sscanf(tokens[11], "%d/%d/%d", &year, &month, &day);
         Date date = dateCreate(year, month, day);
-
-        array[count++] = cacheCreate(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], date.year, date.month, date.day);
+        
+        int founds = atoi(tokens[12]);
+        int not_founds = atoi(tokens[13]);
+        int favourites = atoi(tokens[14]);
+        
+        array[count++] = cacheCreate(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], kind, size, difficulty, terrain, status, date.year, date.month, date.day, founds, not_founds, favourites, tokens[15]);
 
 	    free(tokens);
         free(tmp);

@@ -54,13 +54,15 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 }
 
 int main() {
-    char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP"};
-    int size, commandIndex;
-    char res[10];
+    char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP"},
+         res[10],
+         confirmQuit;
+    int size, 
+        commandIndex;
 
     size = sizeof(commandsList) / sizeof(commandsList[0]);
 
-    // TODO: implement menu and call subprograms for each operation
+    interpretCommand:
 
     commandIndex = getCommand(res, commandsList, &size);
 
@@ -73,7 +75,26 @@ int main() {
             
         break;
         case 2:
-            return 0;
+            do
+            {
+                printf("\nTem a certeza que pretende sair? (S/N)\n");
+                scanf(" %c", &confirmQuit);
+
+                confirmQuit = toupper(confirmQuit);
+
+                if (confirmQuit == 'S')
+                {
+                    return 0;
+                }
+                else if (confirmQuit == 'N')
+                {
+                    goto interpretCommand;
+                }
+                else
+                {
+                    printf("Resposta invalida, tente novamente\n\n");
+                }
+            } while (1);
         break;
         default:
 

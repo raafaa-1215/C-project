@@ -6,8 +6,9 @@
 #include "date.h"
 #include "cache.h"
 
-#define MAX_CACHE 2000
+#define MAX_CACHE 2001
 
+// Imprime a lista de comandos disponíveis correspondente à fase 1 do projeto
 void printCommands(char (*commandsList)[10]) {
     printf("\nOs comandos disponiveis sao: \n");
     
@@ -19,6 +20,7 @@ void printCommands(char (*commandsList)[10]) {
     printf("\n\n");
 }
 
+// Solicita o comando ao utilizador e devolve o index do mesmo
 int getCommand(char *str, char (*commandsList)[10], int *size) {
     int i;
 
@@ -61,7 +63,7 @@ int main() {
     Cache arrayOfCache[MAX_CACHE];
     char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP"},
          res[10],
-         confirmQuit,
+         confirmRes,
          fileName[21],
          uniqueCache[MAX_CACHE][11];
     int size, 
@@ -79,7 +81,7 @@ int main() {
 
     switch (commandIndex)
     {
-        case 0:
+        case 0: // comando LOAD
             if (arrayOfCache[0].code[0] == '\0')
             {
                 do
@@ -87,7 +89,7 @@ int main() {
                     printf("\nIntroduza o nome do ficheiro: ");
                     gets(fileName);
 
-                    numCache = importCaches(fileName, arrayOfCache, MAX_CACHE);
+                    numCache = loadCaches(fileName, arrayOfCache, MAX_CACHE);
 
                     if (numCache == 0)
                     {
@@ -127,22 +129,60 @@ int main() {
                 goto interpretCommand;
             }
         break;
-        case 1:
-            
+        case 1: // comando CLEAR
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                do
+                {
+                    printf("\nTem a certeza que pretende limpar as caches? (S/N)\n");
+                    scanf(" %c", &confirmRes);
+
+                    confirmRes = toupper(confirmRes);
+
+                    if (confirmRes == 'S')
+                    {
+                        clearCache(arrayOfCache, MAX_CACHE);
+                        
+                        if (arrayOfCache[0].code[0] == '\0')
+                        {
+                            printf("\n<Cache data cleared>\n\n");
+                        }
+                        else
+                        {
+                            printf("\n<Error clearing cache data>\n\n");
+                        }
+                        
+                        goto interpretCommand;
+                    }
+                    else if (confirmRes == 'N')
+                    {
+                        goto interpretCommand;
+                    }
+                    else
+                    {
+                        printf("Resposta invalida, tente novamente\n\n");
+                    }
+                } while (1);   
+            }
+            else
+            {
+                printf("\n<Cache data is already clear>\n\n");
+                goto interpretCommand;
+            }
         break;
-        case 2:
+        case 2: // comando QUIT
             do
             {
                 printf("\nTem a certeza que pretende sair? (S/N)\n");
-                scanf(" %c", &confirmQuit);
+                scanf(" %c", &confirmRes);
 
-                confirmQuit = toupper(confirmQuit);
+                confirmRes = toupper(confirmRes);
 
-                if (confirmQuit == 'S')
+                if (confirmRes == 'S')
                 {
                     return 0;
                 }
-                else if (confirmQuit == 'N')
+                else if (confirmRes == 'N')
                 {
                     goto interpretCommand;
                 }

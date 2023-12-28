@@ -5,7 +5,7 @@
 #include "date.h"
 #include "cache.h"
 
-#define MAX_CACHE 2000
+#define MAX_CACHE 2001
 
 Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]) {
     Cache cache;
@@ -30,8 +30,7 @@ Cache cacheCreate(char code[], char name[], char state[], char owner[], char lat
     return cache;
 }
 
-int importCaches(char filename[], Cache array[], int maxLength) {
-
+int loadCaches(char filename[], Cache array[], int maxLength) {
     FILE* stream = fopen(filename, "r");
 
     int count = 0;
@@ -120,4 +119,14 @@ int importCaches(char filename[], Cache array[], int maxLength) {
     fclose(stream);
 
     return count;
+}
+
+void clearCache(Cache arrayOfCaches[], int arrayLength) {
+    Date emptyDate = dateCreate(0000, 00, 00);
+    Cache emptyCache = cacheCreate("\0", "\0", "\0", "\0", "\0", "\0", EARTHCACHE, NOT_CHOSEN, 1, 1, DISABLED, emptyDate.year, emptyDate.month, emptyDate.day, 0, 0, 0, "-9999999");
+
+    for (int i = 0; i < arrayLength; i++)
+    {
+        arrayOfCaches[i] = emptyCache;
+    }
 }

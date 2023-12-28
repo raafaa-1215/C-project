@@ -46,4 +46,5 @@ typedef struct cache {
 } Cache; 
 
 Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]);
-int importCaches(char filename[], Cache array[], int maxLength);
+int loadCaches(char filename[], Cache array[], int maxLength);
+void clearCache(Cache arrayOfCaches[], int arrayLength);

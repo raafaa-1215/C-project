@@ -192,6 +192,32 @@ int main() {
                 }
             } while (1);
         break;
+        case 3:
+            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+            "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
+
+            for (int i = 0; i < numCache; i++) {
+                printf("%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%f\t%f\t%s\t%04d/%02d/%02d\t%d\t%d\t%d\t%s\n",
+                    arrayOfCache[i].code,
+                    arrayOfCache[i].name,
+                    arrayOfCache[i].state,
+                    arrayOfCache[i].owner,
+                    arrayOfCache[i].latitude,
+                    arrayOfCache[i].longitude,
+                    arrayOfCache[i].kind,
+                    arrayOfCache[i].size,
+                    arrayOfCache[i].difficulty,
+                    arrayOfCache[i].terrain,
+                    (arrayOfCache[i].status == AVAILABLE) ? "AVAILABLE" : "DISABLED",
+                    arrayOfCache[i].hidden_date.year,
+                    arrayOfCache[i].hidden_date.month,
+                    arrayOfCache[i].hidden_date.day,
+                    arrayOfCache[i].founds,
+                    arrayOfCache[i].not_founds,
+                    arrayOfCache[i].favourites,
+                    arrayOfCache[i].altitude
+                );
+            }
         default:
 
         break;

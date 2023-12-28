@@ -95,9 +95,7 @@ int main() {
                     }
                     else
                     {
-                        strcpy(uniqueCache[0], arrayOfCache[0].code);
-
-                        for (int i = 0; i < MAX_CACHE; ++i) 
+                        for (int i = 1; i < numCache; ++i) 
                         {
                             int isUnique = 1;
 
@@ -112,6 +110,7 @@ int main() {
 
                             if (isUnique) 
                             {
+                                strcpy(uniqueCache[numUniqueCache], arrayOfCache[i].code);
                                 numUniqueCache++;
                             }
                         }

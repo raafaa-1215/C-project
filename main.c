@@ -193,11 +193,11 @@ int main() {
             } while (1);
         break;
         case 3:
-            printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+            printf("%-7s|%-35s|%-7s|%-7s|%-15s|%-15s|%-6s|%-6s|%-15s|%-15s|%-9s|%-11s|%-6s|%-10s|%-10s|%-8s|\n",
             "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
 
             for (int i = 0; i < numCache; i++) {
-                printf("%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%f\t%f\t%s\t%04d/%02d/%02d\t%d\t%d\t%d\t%s\n",
+                printf("|%-7s|%-35s|%-7s|%-7s|%-15s|%-15s|%-6d|%-6d|%-15.6f|%-15.6f|%-9s|%04d/%02d/%02d |%-6d|%-10d|%-10d|%-8s|\n",
                     arrayOfCache[i].code,
                     arrayOfCache[i].name,
                     arrayOfCache[i].state,

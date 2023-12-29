@@ -12,7 +12,3 @@ Date dateCreate(int year, int month, int day) {
 
     return date;
 }
-
-void datePrint(Date date) {
-    printf("%d/%d/%d", date.year, date.month, date.day);
-}

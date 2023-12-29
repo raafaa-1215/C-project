@@ -5,4 +5,4 @@ typedef struct date {
 } Date;
 
 Date dateCreate(int day, int month, int year);
-void datePrint(Date date);
+

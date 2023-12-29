@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "stringutils.h"
 #include "input.h"
 #include "date.h"
 #include "cache.h"
@@ -45,6 +46,13 @@ int loadCaches(char filename[], Cache array[], int maxLength) {
         
         char** tokens = splitString(tmp, 16, ";");
         
+        rtrim(tokens[0]);
+        rtrim(tokens[1]);
+        rtrim(tokens[2]);
+        rtrim(tokens[3]);
+        rtrim(tokens[4]);
+        rtrim(tokens[6]);
+
         Kind kind;
         switch (tokens[6][0])
         {
@@ -109,6 +117,8 @@ int loadCaches(char filename[], Cache array[], int maxLength) {
         int founds = atoi(tokens[12]);
         int not_founds = atoi(tokens[13]);
         int favourites = atoi(tokens[14]);
+
+        rtrim(tokens[15]);
         
         array[count++] = cacheCreate(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], kind, size, difficulty, terrain, status, date.year, date.month, date.day, founds, not_founds, favourites, tokens[15]);
 
@@ -121,12 +131,185 @@ int loadCaches(char filename[], Cache array[], int maxLength) {
     return count;
 }
 
-void clearCache(Cache arrayOfCaches[], int arrayLength) {
+void clearCache(Cache *arrayOfCaches, int arrayLength) {
     Date emptyDate = dateCreate(0000, 00, 00);
     Cache emptyCache = cacheCreate("\0", "\0", "\0", "\0", "\0", "\0", EARTHCACHE, NOT_CHOSEN, 1, 1, DISABLED, emptyDate.year, emptyDate.month, emptyDate.day, 0, 0, 0, "-9999999");
 
     for (int i = 0; i < arrayLength; i++)
     {
         arrayOfCaches[i] = emptyCache;
+    }
+}
+
+void listCache(Cache *arrayOfCaches, int arrayLength) {
+    printf("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("| %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %-11s | %-8s | %-9s | %-11s | %-6s | %-10s | %-10s | %-9s |",
+    "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
+    printf("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < arrayLength; i++) {
+
+        char kind[12], size[12];
+
+        switch (arrayOfCaches[i].kind)
+        {
+            case 0:
+                strcpy(kind, "EARTHCACHE");
+            break;
+            case 1:
+                strcpy(kind, "LETTERBOX");
+            break;
+            case 2:
+                strcpy(kind, "MULTI");
+            break;
+            case 3:
+                strcpy(kind, "PUZZLE");
+            break;
+            case 4:
+                strcpy(kind, "TRADITIONAL");
+            break;
+            case 5:
+                strcpy(kind, "VIRTUAL");
+            break;
+            default:
+                strcpy(kind, "WEBCAM");
+            break;
+        }
+
+        switch (arrayOfCaches[i].size)
+        {        
+            case 0:
+                strcpy(size, "MICRO");
+            break;
+            case 1:
+                strcpy(size, "SMALL");
+            break;
+            case 2:
+                strcpy(size, "REGULAR");
+            break;
+            case 3:
+                strcpy(size, "LARGE");
+            break;
+            case 4:
+                strcpy(size, "OTHER_SIZE");
+            break;
+            case 5:
+                strcpy(size, "VIRTUAL_SIZE");
+            break;
+            default:
+                strcpy(size, "NOT_CHOSEN");
+            break;
+        }
+
+        printf("| %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %11.1f | %8.1f | %-9s | %04d/%02d/%02d  | %6d | %10d | %10d | %9s |",
+            arrayOfCaches[i].code,
+            arrayOfCaches[i].name,
+            arrayOfCaches[i].state,
+            arrayOfCaches[i].owner,
+            arrayOfCaches[i].latitude,
+            arrayOfCaches[i].longitude,
+            kind,
+            size,
+            arrayOfCaches[i].difficulty,
+            arrayOfCaches[i].terrain,
+            (arrayOfCaches[i].status == AVAILABLE) ? "AVAILABLE" : "DISABLED",
+            arrayOfCaches[i].hidden_date.year,
+            arrayOfCaches[i].hidden_date.month,
+            arrayOfCaches[i].hidden_date.day,
+            arrayOfCaches[i].founds,
+            arrayOfCaches[i].not_founds,
+            arrayOfCaches[i].favourites,
+            arrayOfCaches[i].altitude
+        );
+
+        printf("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    }
+}
+
+void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
+    printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("| %s | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %-11s | %-8s | %-9s | %-11s | %-6s | %-10s | %-10s | %-9s |",
+    "FOUNDP", "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
+    printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < arrayLength; i++) {
+
+        char kind[12], size[12];
+
+        switch (arrayOfCaches[i].kind)
+        {
+            case 0:
+                strcpy(kind, "EARTHCACHE");
+            break;
+            case 1:
+                strcpy(kind, "LETTERBOX");
+            break;
+            case 2:
+                strcpy(kind, "MULTI");
+            break;
+            case 3:
+                strcpy(kind, "PUZZLE");
+            break;
+            case 4:
+                strcpy(kind, "TRADITIONAL");
+            break;
+            case 5:
+                strcpy(kind, "VIRTUAL");
+            break;
+            default:
+                strcpy(kind, "WEBCAM");
+            break;
+        }
+
+        switch (arrayOfCaches[i].size)
+        {        
+            case 0:
+                strcpy(size, "MICRO");
+            break;
+            case 1:
+                strcpy(size, "SMALL");
+            break;
+            case 2:
+                strcpy(size, "REGULAR");
+            break;
+            case 3:
+                strcpy(size, "LARGE");
+            break;
+            case 4:
+                strcpy(size, "OTHER_SIZE");
+            break;
+            case 5:
+                strcpy(size, "VIRTUAL_SIZE");
+            break;
+            default:
+                strcpy(size, "NOT_CHOSEN");
+            break;
+        }
+
+        int foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
+
+        printf("| %5d%% | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %11.1f | %8.1f | %-9s | %04d/%02d/%02d  | %6d | %10d | %10d | %9s |",
+            foundp,
+            arrayOfCaches[i].code,
+            arrayOfCaches[i].name,
+            arrayOfCaches[i].state,
+            arrayOfCaches[i].owner,
+            arrayOfCaches[i].latitude,
+            arrayOfCaches[i].longitude,
+            kind,
+            size,
+            arrayOfCaches[i].difficulty,
+            arrayOfCaches[i].terrain,
+            (arrayOfCaches[i].status == AVAILABLE) ? "AVAILABLE" : "DISABLED",
+            arrayOfCaches[i].hidden_date.year,
+            arrayOfCaches[i].hidden_date.month,
+            arrayOfCaches[i].hidden_date.day,
+            arrayOfCaches[i].founds,
+            arrayOfCaches[i].not_founds,
+            arrayOfCaches[i].favourites,
+            arrayOfCaches[i].altitude
+        );
+
+        printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     }
 }

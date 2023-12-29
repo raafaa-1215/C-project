@@ -29,7 +29,7 @@ typedef enum {
 typedef struct cache {
     char code[11], 
          name[101], 
-         state[21], 
+         state[25], 
          owner[51], 
          latitude[26],
          longitude[26];
@@ -48,3 +48,5 @@ typedef struct cache {
 Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]);
 int loadCaches(char filename[], Cache array[], int maxLength);
 void clearCache(Cache arrayOfCaches[], int arrayLength);
+void listCache(Cache arrayOfCaches[], int arrayLength);
+void listFOUNDP(Cache arrayOfCaches[], int arrayLength);

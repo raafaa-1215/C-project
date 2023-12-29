@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "stringutils.h"
 #include "input.h"
 #include "date.h"
 #include "cache.h"
@@ -10,7 +11,7 @@
 
 // Imprime a lista de comandos disponíveis correspondente à fase 1 do projeto
 void printCommands(char (*commandsList)[10]) {
-    printf("\nOs comandos disponiveis sao: \n");
+    printf("\nAll available commands are: \n");
     
     for (int i = 0; i < 5; i++)
     {
@@ -26,7 +27,7 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 
     do
     {
-        printf("Introduza o comando ('help' para listar comandos):\n");
+        printf("Insert the command ('help' to list commands):\n");
         gets(str);
 
         for (i = 0; str[i] != '\0' ; i++)
@@ -50,7 +51,7 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 
         if (i == *size)
         {
-            printf("Comando nao encontrado, tente novamente.\n\n");
+            printf("\n<Invalid command, try again>\n\n");
         }
     } while (1);
     
@@ -86,14 +87,14 @@ int main() {
             {
                 do
                 {
-                    printf("\nIntroduza o nome do ficheiro: ");
+                    printf("\nInsert file name: ");
                     gets(fileName);
 
                     numCache = loadCaches(fileName, arrayOfCache, MAX_CACHE);
 
                     if (numCache == 0)
                     {
-                        printf("\n<File not found>\n");
+                        printf("\n<File not found>\n\n");
                     }
                     else
                     {
@@ -117,7 +118,7 @@ int main() {
                             }
                         }
                         
-                        printf("\n<%d unique caches loaded>\n", numUniqueCache);
+                        printf("\n<%d unique caches loaded>\n\n", numUniqueCache);
 
                         goto interpretCommand;
                     }
@@ -134,14 +135,14 @@ int main() {
             {
                 do
                 {
-                    printf("\nTem a certeza que pretende limpar as caches? (S/N)\n");
+                    printf("\nAre you sure you want to clear the caches? (Y/N)\n");
                     scanf(" %c", &confirmRes);
 
                     confirmRes = toupper(confirmRes);
 
-                    if (confirmRes == 'S')
+                    if (confirmRes == 'Y')
                     {
-                        clearCache(arrayOfCache, MAX_CACHE);
+                        clearCache(arrayOfCache, numCache);
                         
                         if (arrayOfCache[0].code[0] == '\0')
                         {
@@ -160,7 +161,7 @@ int main() {
                     }
                     else
                     {
-                        printf("Resposta invalida, tente novamente\n\n");
+                        printf("\n<Invalid anwser, try again>\n\n");
                     }
                 } while (1);   
             }
@@ -173,12 +174,12 @@ int main() {
         case 2: // comando QUIT
             do
             {
-                printf("\nTem a certeza que pretende sair? (S/N)\n");
+                printf("\nAre you sure you want to quit? (Y/N)\n");
                 scanf(" %c", &confirmRes);
 
                 confirmRes = toupper(confirmRes);
 
-                if (confirmRes == 'S')
+                if (confirmRes == 'Y')
                 {
                     return 0;
                 }
@@ -188,38 +189,34 @@ int main() {
                 }
                 else
                 {
-                    printf("Resposta invalida, tente novamente\n\n");
+                    printf("\n<Invalid answer, try again>\n\n");
                 }
             } while (1);
         break;
-        case 3:
-            printf("%-7s|%-35s|%-7s|%-7s|%-15s|%-15s|%-6s|%-6s|%-15s|%-15s|%-9s|%-11s|%-6s|%-10s|%-10s|%-8s|\n",
-            "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
-
-            for (int i = 0; i < numCache; i++) {
-                printf("|%-7s|%-35s|%-7s|%-7s|%-15s|%-15s|%-6d|%-6d|%-15.6f|%-15.6f|%-9s|%04d/%02d/%02d |%-6d|%-10d|%-10d|%-8s|\n",
-                    arrayOfCache[i].code,
-                    arrayOfCache[i].name,
-                    arrayOfCache[i].state,
-                    arrayOfCache[i].owner,
-                    arrayOfCache[i].latitude,
-                    arrayOfCache[i].longitude,
-                    arrayOfCache[i].kind,
-                    arrayOfCache[i].size,
-                    arrayOfCache[i].difficulty,
-                    arrayOfCache[i].terrain,
-                    (arrayOfCache[i].status == AVAILABLE) ? "AVAILABLE" : "DISABLED",
-                    arrayOfCache[i].hidden_date.year,
-                    arrayOfCache[i].hidden_date.month,
-                    arrayOfCache[i].hidden_date.day,
-                    arrayOfCache[i].founds,
-                    arrayOfCache[i].not_founds,
-                    arrayOfCache[i].favourites,
-                    arrayOfCache[i].altitude
-                );
+        case 3: // comando LIST
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                listCache(arrayOfCache, numCache);
             }
-        default:
+            else
+            {
+                printf("\n<Data not loaded>\n\n");
+            }
 
+            goto interpretCommand;
+        break;
+        case 4: // comando FOUNDP
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                listFOUNDP(arrayOfCache, numCache);
+                fflush(stdin);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n\n");
+            }
+
+            goto interpretCommand;
         break;
     }
 }

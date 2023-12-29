@@ -209,7 +209,6 @@ int main() {
             if (arrayOfCache[0].code[0] != '\0')
             {
                 listFOUNDP(arrayOfCache, numCache);
-                fflush(stdin);
             }
             else
             {

@@ -227,6 +227,8 @@ void listCache(Cache *arrayOfCaches, int arrayLength) {
 }
 
 void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
+    int foundp;
+
     printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     printf("| %s | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %-11s | %-8s | %-9s | %-11s | %-6s | %-10s | %-10s | %-9s |",
     "FOUNDP", "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
@@ -286,7 +288,7 @@ void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
             break;
         }
 
-        int foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
+        foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
 
         printf("| %5d%% | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %11.1f | %8.1f | %-9s | %04d/%02d/%02d  | %6d | %10d | %10d | %9s |",
             foundp,

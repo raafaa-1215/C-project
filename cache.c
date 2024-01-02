@@ -34,8 +34,10 @@ Cache cacheCreate(char code[], char name[], char state[], char owner[], char lat
 int loadCaches(char filename[], Cache array[], int maxLength) {
     FILE* stream = fopen(filename, "r");
 
-    int count = 0;
-    char line[MAX_CACHE];
+    int count = 0,
+        numUniqueCache = 0;
+    char line[MAX_CACHE],
+         uniqueCache[MAX_CACHE][11];
 
     fgets(line, MAX_CACHE, stream);
     while (fgets(line, MAX_CACHE, stream))
@@ -120,7 +122,26 @@ int loadCaches(char filename[], Cache array[], int maxLength) {
 
         rtrim(tokens[15]);
         
-        array[count++] = cacheCreate(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], kind, size, difficulty, terrain, status, date.year, date.month, date.day, founds, not_founds, favourites, tokens[15]);
+        for (int i = 0; i <= count; ++i) 
+        {
+            int isUnique = 1;
+
+            for (int j = 0; j < numUniqueCache; ++j) 
+            {
+                if (strcmp(tokens[0], uniqueCache[j]) == 0) 
+                {
+                    isUnique = 0;
+                    break;
+                }
+            }
+
+            if (isUnique) 
+            {
+                strcpy(uniqueCache[numUniqueCache], tokens[0]);
+                numUniqueCache++;
+                array[count++] = cacheCreate(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], kind, size, difficulty, terrain, status, date.year, date.month, date.day, founds, not_founds, favourites, tokens[15]);
+            }
+        }
 
 	    free(tokens);
         free(tmp);
@@ -227,8 +248,8 @@ void listCache(Cache *arrayOfCaches, int arrayLength) {
 }
 
 void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
-    int foundp;
-
+    long foundp;
+    
     printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     printf("| %s | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %-11s | %-8s | %-9s | %-11s | %-6s | %-10s | %-10s | %-9s |",
     "FOUNDP", "CODE", "NAME", "STATE", "OWNER", "LATITUDE", "LONGITUDE", "KIND", "SIZE", "DIFFICULTY", "TERRAIN", "STATUS", "HIDDEN_DATE", "FOUNDS", "NOT_FOUNDS", "FAVOURITES", "ALTITUDE");
@@ -290,7 +311,7 @@ void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
 
         foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
 
-        printf("| %5d%% | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %11.1f | %8.1f | %-9s | %04d/%02d/%02d  | %6d | %10d | %10d | %9s |",
+        printf("| %5ld%% | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %11.1f | %8.1f | %-9s | %04d/%02d/%02d  | %6d | %10d | %10d | %9s |",
             foundp,
             arrayOfCaches[i].code,
             arrayOfCaches[i].name,

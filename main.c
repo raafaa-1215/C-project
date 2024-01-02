@@ -65,12 +65,10 @@ int main() {
     char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP"},
          res[10],
          confirmRes,
-         fileName[21],
-         uniqueCache[MAX_CACHE][11];
+         fileName[21];
     int size, 
         commandIndex,
-        numCache = 0,
-        numUniqueCache = 0;
+        numCache = 0;
 
     size = sizeof(commandsList) / sizeof(commandsList[0]);
 
@@ -98,28 +96,7 @@ int main() {
                     }
                     else
                     {
-                        for (int i = 1; i < numCache; ++i) 
-                        {
-                            int isUnique = 1;
-
-                            for (int j = 0; j < numUniqueCache; ++j) 
-                            {
-                                if (strcmp(arrayOfCache[i].code, uniqueCache[j]) == 0) 
-                                {
-                                    isUnique = 0;
-                                    break;
-                                }
-                            }
-
-                            if (isUnique) 
-                            {
-                                strcpy(uniqueCache[numUniqueCache], arrayOfCache[i].code);
-                                numUniqueCache++;
-                            }
-                        }
-                        
-                        printf("\n<%d unique caches loaded>\n\n", numUniqueCache);
-
+                        printf("\n<%d unique caches loaded>\n\n", numCache);
                         goto interpretCommand;
                     }
                 } while (1);
@@ -147,23 +124,24 @@ int main() {
                         if (arrayOfCache[0].code[0] == '\0')
                         {
                             printf("\n<Cache data cleared>\n\n");
+                            break;
                         }
                         else
                         {
                             printf("\n<Error clearing cache data>\n\n");
-                        }
-                        
-                        goto interpretCommand;
+                        } 
                     }
                     else if (confirmRes == 'N')
                     {
-                        goto interpretCommand;
+                        break;
                     }
                     else
                     {
                         printf("\n<Invalid anwser, try again>\n\n");
                     }
-                } while (1);   
+                } while (1); 
+
+                goto interpretCommand;  
             }
             else
             {

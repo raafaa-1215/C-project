@@ -309,7 +309,9 @@ void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
             break;
         }
 
-        foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
+        /*foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);*/
+        foundp = ((float)arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
+
 
         printf("| %5ld%% | %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %11.1f | %8.1f | %-9s | %04d/%02d/%02d  | %6d | %10d | %10d | %9s |",
             foundp,

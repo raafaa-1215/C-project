@@ -309,7 +309,6 @@ void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
             break;
         }
 
-        /*foundp = (arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);*/
         foundp = ((float)arrayOfCaches[i].founds * 100) / (arrayOfCaches[i].founds + arrayOfCaches[i].not_founds);
 
 

@@ -9,16 +9,14 @@
 
 #define MAX_CACHE 2001
 
-// Imprime a lista de comandos disponíveis correspondente à fase 1 do projeto
-void printCommands(char (*commandsList)[10]) {
+// Imprime a lista de comandos disponíveis correspondente à fase 2 do projeto
+void printCommands(char (*commandsList)[10], int *size) {
     printf("\nAll available commands are: \n");
     
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < *size; i++)
     {
         printf("  - %s\n", commandsList[i]);
     }
-    
-    printf("\n\n");
 }
 
 // Solicita o comando ao utilizador e devolve o index do mesmo
@@ -27,7 +25,7 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 
     do
     {
-        printf("Insert the command ('help' to list commands):\n");
+        printf("\nInsert the command ('help' to list commands):\n");
         gets(str);
 
         for (i = 0; str[i] != '\0' ; i++)
@@ -37,7 +35,7 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 
         if (strcmp(str, "HELP") == 0)
         {
-            printCommands(commandsList);
+            printCommands(commandsList, size);
             continue;
         }
         
@@ -51,7 +49,7 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
 
         if (i == *size)
         {
-            printf("\n<Invalid command, try again>\n\n");
+            printf("\n<Invalid command, try again>\n");
         }
     } while (1);
     
@@ -60,17 +58,19 @@ int getCommand(char *str, char (*commandsList)[10], int *size) {
     return i;
 }
 
+
+// Corpo principal, onde a execução do comando é decidida
 int main() {
     Cache arrayOfCache[MAX_CACHE];
-    char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP"},
+    char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP", "SEARCH", "EDIT", "CENTER", "AGE", "SORT", "STATEC", "M81", "SAVE"},
          res[10],
+         findCode[11],
          confirmRes,
          fileName[21];
-    int size, 
+    int size = sizeof(commandsList) / sizeof(commandsList[0]), 
         commandIndex,
+        editIndex,
         numCache = 0;
-
-    size = sizeof(commandsList) / sizeof(commandsList[0]);
 
     interpretCommand:
 
@@ -96,14 +96,14 @@ int main() {
                     }
                     else
                     {
-                        printf("\n<%d unique caches loaded>\n\n", numCache);
+                        printf("\n<%d unique caches loaded>\n", numCache);
                         goto interpretCommand;
                     }
                 } while (1);
             }
             else
             {
-                printf("\n<Cache data exists. Please clear it first.>\n\n");
+                printf("\n<Cache data exists. Please clear it first.>\n");
                 goto interpretCommand;
             }
         break;
@@ -123,12 +123,12 @@ int main() {
                         
                         if (arrayOfCache[0].code[0] == '\0')
                         {
-                            printf("\n<Cache data cleared>\n\n");
+                            printf("\n<Cache data cleared>\n");
                             break;
                         }
                         else
                         {
-                            printf("\n<Error clearing cache data>\n\n");
+                            printf("\n<Error clearing cache data>\n");
                         } 
                     }
                     else if (confirmRes == 'N')
@@ -137,7 +137,7 @@ int main() {
                     }
                     else
                     {
-                        printf("\n<Invalid anwser, try again>\n\n");
+                        printf("\n<Invalid anwser, try again>\n");
                     }
                 } while (1); 
 
@@ -145,7 +145,7 @@ int main() {
             }
             else
             {
-                printf("\n<Cache data is already clear>\n\n");
+                printf("\n<Cache data is already clear>\n");
                 goto interpretCommand;
             }
         break;
@@ -167,7 +167,7 @@ int main() {
                 }
                 else
                 {
-                    printf("\n<Invalid answer, try again>\n\n");
+                    printf("\n<Invalid answer, try again>\n");
                 }
             } while (1);
         break;
@@ -178,7 +178,7 @@ int main() {
             }
             else
             {
-                printf("\n<Data not loaded>\n\n");
+                printf("\n<Data not loaded>\n");
             }
 
             goto interpretCommand;
@@ -190,10 +190,51 @@ int main() {
             }
             else
             {
-                printf("\n<Data not loaded>\n\n");
+                printf("\n<Data not loaded>\n");
             }
 
             goto interpretCommand;
+        break;
+        case 5: // comando SEARCH
+        break;
+        case 6: // comando EDIT
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                editStart:
+                
+                printf("\nInsert the cache code: ");
+                gets(findCode);
+
+                editIndex = findEditCache(findCode, arrayOfCache, numCache);
+                
+                if (editIndex == -1)
+                {
+                    printf("\n<Cache not found>\n");
+                    goto editStart;
+                }
+                else
+                {
+                    editCache(&arrayOfCache[editIndex]);
+                }
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
+        break;
+        case 7: // comando CENTER
+        break;
+        case 8: // comando AGE
+        break;
+        case 9: // comando SORT
+        break;
+        case 10: // comando STATEC
+        break;
+        case 11: // comando M81
+        break;
+        case 12: // comando SAVE
         break;
     }
 }

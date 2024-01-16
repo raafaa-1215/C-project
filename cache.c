@@ -7,6 +7,7 @@
 #include "cache.h"
 
 #define MAX_CACHE 2001
+#define BISSEXTO(X) ((((X % 4 == 0) && (X % 100 != 0)) || (X % 400 == 0)) ? 1 : 0)
 
 Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]) {
     Cache cache;
@@ -31,6 +32,7 @@ Cache cacheCreate(char code[], char name[], char state[], char owner[], char lat
     return cache;
 }
 
+// comando LOAD
 int loadCaches(char filename[], Cache array[], int maxLength) {
     FILE* stream = fopen(filename, "r");
 
@@ -152,6 +154,7 @@ int loadCaches(char filename[], Cache array[], int maxLength) {
     return count;
 }
 
+// comando CLEAR
 void clearCache(Cache *arrayOfCaches, int arrayLength) {
     Date emptyDate = dateCreate(0000, 00, 00);
     Cache emptyCache = cacheCreate("\0", "\0", "\0", "\0", "\0", "\0", EARTHCACHE, NOT_CHOSEN, 1, 1, DISABLED, emptyDate.year, emptyDate.month, emptyDate.day, 0, 0, 0, "-9999999");
@@ -162,6 +165,7 @@ void clearCache(Cache *arrayOfCaches, int arrayLength) {
     }
 }
 
+// comando LIST
 void listCache(Cache *arrayOfCaches, int arrayLength) {
     printf("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
     printf("| %-8s | %-50s | %-22s | %-22s | %-10s | %-10s | %-12s | %-12s | %-11s | %-8s | %-9s | %-11s | %-6s | %-10s | %-10s | %-9s |",
@@ -247,6 +251,7 @@ void listCache(Cache *arrayOfCaches, int arrayLength) {
     }
 }
 
+// comando FOUNDP
 void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
     long foundp;
     
@@ -335,5 +340,145 @@ void listFOUNDP(Cache *arrayOfCaches, int arrayLength) {
         );
 
         printf("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    }
+}
+
+// comando EDIT
+int findEditCache(char *cacheCode, Cache *arrayOfCaches, int arrayLength) {
+    for (int i = 0; i < arrayLength; i++)
+    {
+        if (strcmp(cacheCode, arrayOfCaches[i].code) == 0)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void editCache(Cache *cacheToEdit) {
+    int res,
+        opt,
+        day, month, year;
+    char owner[51],
+         altitude[8];
+    
+    cachemenu:
+
+    fflush(stdin);
+
+    printf("\nData available to edit:\n");
+    printf("1 - owner\n");
+    printf("2 - status\n");
+    printf("3 - hidden_date\n");
+    printf("4 - altitude\n");
+    printf("0 - exit\n");
+    printf("What data do you want to edit -> ");
+    scanf(" %d", &res);
+
+    switch (res)
+    {
+        case 1:
+            
+            printf("Insert the new owner name (max. of 50 characters): ");
+            gets(owner);
+
+            if (owner[0] == '\0')
+            {
+                printf("\n<Name not valid>\n");
+                goto cachemenu;
+            }
+            else
+            {
+                strcpy(cacheToEdit->owner, owner);
+                printf("\n<Owner updated successfuly>\n");
+            }
+        break;
+        case 2: 
+            printf("Cache status options\n");
+            printf("1 for AVAILABLE\n");
+            printf("2 for DISABLED\n");
+            printf("Option > ");
+            scanf(" %d", &opt);
+
+            if (opt < 1 || opt > 2)
+            {
+                printf("\n<Invalid option>\n");
+                goto cachemenu;
+            }
+            else if (opt == 1)
+            {
+                cacheToEdit->status = AVAILABLE;
+            }
+            else
+            {
+                cacheToEdit->status = DISABLED;
+            }
+
+            printf("\n<Status updated successfuly>\n");
+        break;
+        case 3:
+            printf("Type the year: ");
+            scanf(" %d", &year);
+
+            if (year < 1900 || year > 2024)
+            {
+                printf("\n<Invalid year>\n");
+                goto cachemenu;
+            }
+            else
+            {
+                printf("Type the month: ");
+                scanf(" %d", &month);
+
+                if (month < 1 || month > 12)
+                {
+                    printf("\n<Invalid month>\n");
+                    goto cachemenu;
+                }
+                else
+                {
+                    printf("Type the day: ");
+                    scanf(" %d", &day);
+                    
+                    if ((!(day < 1 || day > 31) && (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)) || 
+                        (!(day < 1 || day > 30) && (month == 4 || month == 6 || month == 9 || month == 11)) ||
+                        (!(day < 1 || day > 29) && (month == 2 && !BISSEXTO(year))) ||
+                        (!(day < 1 || day > 28) && (month == 2 && BISSEXTO(year))))
+                    {
+                        printf("\n<Invalid day>\n");
+                        goto cachemenu;
+                    }
+                    else
+                    {
+                        cacheToEdit->hidden_date = dateCreate(year, month, day);
+                        printf("\n<Date updated successfuly>\n");
+                    }
+                }
+            }
+        break;
+        case 4:
+            fflush(stdin);
+            printf("Insert the new altitude value (max. of 8 digits): ");
+            gets(altitude);
+
+            if (altitude[0] == '\0')
+            {
+                printf("\n<Altitude not valid>\n");
+                goto cachemenu;
+            }
+            else
+            {
+                strcpy(cacheToEdit->altitude, altitude);
+                printf("\n<Altitude updated successfuly>\n");
+            }
+        break;
+        case 0:
+            return;
+        break;
+        default:
+            printf("\n<Invalid option, try again!>\n");
+            goto cachemenu;
+        break;
     }
 }

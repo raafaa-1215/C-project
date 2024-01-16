@@ -46,7 +46,14 @@ typedef struct cache {
 } Cache; 
 
 Cache cacheCreate(char code[], char name[], char state[], char owner[], char latitude[], char longitude[], Kind kind, Size size, float difficulty, float terrain, Status status, int year, int month, int day, int founds, int not_founds, int favourites, char altitude[]);
+// comando LOAD
 int loadCaches(char filename[], Cache array[], int maxLength);
+// comando CLEAR
 void clearCache(Cache *arrayOfCaches, int arrayLength);
+// comando LIST
 void listCache(Cache *arrayOfCaches, int arrayLength);
+// comando FOUNDP
 void listFOUNDP(Cache *arrayOfCaches, int arrayLength);
+// comando EDIT
+int findEditCache(char *cacheCode, Cache *arrayOfCaches, int arrayLength);
+void editCache(Cache *cacheToEdit);

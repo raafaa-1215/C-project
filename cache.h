@@ -1,6 +1,7 @@
 #pragma once
 #include "date.h"
 
+
 typedef enum {
     EARTHCACHE, 
     LETTERBOX, 
@@ -29,7 +30,7 @@ typedef enum {
 typedef struct cache {
     char code[11], 
          name[101], 
-         state[25], 
+         state[26], 
          owner[51], 
          latitude[26],
          longitude[26];
@@ -54,6 +55,26 @@ void clearCache(Cache *arrayOfCaches, int arrayLength);
 void listCache(Cache *arrayOfCaches, int arrayLength);
 // comando FOUNDP
 void listFOUNDP(Cache *arrayOfCaches, int arrayLength);
+// comando SEARCH
+int searchCache(char *cacheCode, Cache *arrayOfCaches, int arrayLength);
+void printSearchCache(Cache *cacheSearched);
 // comando EDIT
 int findEditCache(char *cacheCode, Cache *arrayOfCaches, int arrayLength);
 void editCache(Cache *cacheToEdit);
+// comando AGE
+void getCacheAge(Cache *arrayOfCaches, int arrayLength);
+// comando SORT
+void cacheSortByAltitude(Cache *arrayOfCaches, int arrayLength);
+void cacheSortByState(Cache *arrayOfCaches, int arrayLength);
+void cacheSortByDate(Cache *arrayOfCaches, int arrayLength);
+void sortCache(Cache *cacheToSort, int arrayLength);
+// comando CENTER
+void centerLatitude(Cache *arrayOfCaches, int arrayLength);
+void centerLongitude(Cache *arrayOfCaches, int arrayLength);
+// comando STATEC
+void getCacheStateC(Cache *arrayOfCaches, int arrayLength);
+// comando M81
+void getCacheM81(Cache *arrayOfCaches, int arrayLength);
+// comando SAVE
+bool existsFilename(char *filenameToSave);
+bool saveCachesToFile(char *fileNameToSave, Cache *arrayOfCaches, int arrayLength);

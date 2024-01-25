@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include "stringutils.h"
 #include "input.h"
-#include "date.h"
 #include "cache.h"
 
 #define MAX_CACHE 2001
@@ -64,12 +63,12 @@ int main() {
     Cache arrayOfCache[MAX_CACHE];
     char commandsList[][10] = {"LOAD", "CLEAR", "QUIT", "LIST", "FOUNDP", "SEARCH", "EDIT", "CENTER", "AGE", "SORT", "STATEC", "M81", "SAVE"},
          res[10],
-         findCode[11],
+         seachCode[11],
          confirmRes,
          fileName[21];
     int size = sizeof(commandsList) / sizeof(commandsList[0]), 
         commandIndex,
-        editIndex,
+        searchIndex,
         numCache = 0;
 
     interpretCommand:
@@ -196,6 +195,32 @@ int main() {
             goto interpretCommand;
         break;
         case 5: // comando SEARCH
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                searchStart:
+
+                printf("\nInsert the cache code: ");
+                gets(seachCode);
+                
+                searchIndex = searchCache(seachCode, arrayOfCache, numCache);
+
+                if (searchIndex == -1)
+                {
+                    printf("\n<Cache not found>\n");
+                    goto searchStart;
+                }
+                else
+                {
+                    printf("\n<Cache not found>\n");
+                    printSearchCache(&arrayOfCache[searchIndex]);
+                }
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
         case 6: // comando EDIT
             if (arrayOfCache[0].code[0] != '\0')
@@ -203,18 +228,18 @@ int main() {
                 editStart:
                 
                 printf("\nInsert the cache code: ");
-                gets(findCode);
+                gets(seachCode);
 
-                editIndex = findEditCache(findCode, arrayOfCache, numCache);
+                searchIndex = findEditCache(seachCode, arrayOfCache, numCache);
                 
-                if (editIndex == -1)
+                if (searchIndex == -1)
                 {
                     printf("\n<Cache not found>\n");
                     goto editStart;
                 }
                 else
                 {
-                    editCache(&arrayOfCache[editIndex]);
+                    editCache(&arrayOfCache[searchIndex]);
                 }
             }
             else
@@ -225,16 +250,101 @@ int main() {
             goto interpretCommand;
         break;
         case 7: // comando CENTER
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                centerLatitude(arrayOfCache, numCache);
+                centerLongitude(arrayOfCache, numCache);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
         case 8: // comando AGE
+            if (arrayOfCache[0].code[0] != '\0')
+            {
+                getCacheAge(arrayOfCache, numCache);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
         case 9: // comando SORT
+            if (arrayOfCache[0].code[0] != '\0')
+            {   
+                sortCache(arrayOfCache, numCache);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
         case 10: // comando STATEC
+            if (arrayOfCache[0].code[0] != '\0')
+            {   
+                getCacheStateC(arrayOfCache, numCache);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
         case 11: // comando M81
+            if (arrayOfCache[0].code[0] != '\0')
+            {   
+                getCacheM81(arrayOfCache, numCache);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
         case 12: // comando SAVE
+            if (arrayOfCache[0].code[0] != '\0')
+            {   
+                do
+                {
+                    fflush(stdin);
+
+                    printf("\nInsert file name to save (auto-saved as .csv file): ");
+                    gets(fileName);
+
+                    if (existsFilename(fileName))
+                    {
+                        printf("\n<File already exists>\n\n");
+                    }
+                    else
+                    {
+                        if (saveCachesToFile(fileName, arrayOfCache, numCache))
+                        {
+                            printf("\n<Cache data saved successfully>\n");
+                        }
+                        else
+                        {
+                            printf("\n<Error saving cache data, try again>\n");
+                        }
+
+                        goto interpretCommand;
+                    }
+                } while (1);
+            }
+            else
+            {
+                printf("\n<Data not loaded>\n");
+            }
+
+            goto interpretCommand;
         break;
     }
 }

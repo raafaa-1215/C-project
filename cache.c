@@ -514,7 +514,7 @@ void editCache(Cache *cacheToEdit) {
                 else
                 {
                     strcpy(cacheToEdit->owner, owner);
-                    printf("\n<Owner updated successfuly>\n");
+                    printf("\n<Owner updated successfully>\n");
                 }
             break;
             case 2: 
@@ -538,7 +538,7 @@ void editCache(Cache *cacheToEdit) {
                     cacheToEdit->status = DISABLED;
                 }
 
-                printf("\n<Status updated successfuly>\n");
+                printf("\n<Status updated successfully>\n");
             break;
             case 3:
                 printf("\nCache date options\n");
@@ -576,7 +576,7 @@ void editCache(Cache *cacheToEdit) {
                         else
                         {
                             cacheToEdit->hidden_date = dateCreate(year, month, day);
-                            printf("\n<Date updated successfuly>\n");
+                            printf("\n<Date updated successfully>\n");
                         }
                     }
                 }
@@ -594,7 +594,7 @@ void editCache(Cache *cacheToEdit) {
                 else
                 {
                     strcpy(cacheToEdit->altitude, altitude);
-                    printf("\n<Altitude updated successfuly>\n");
+                    printf("\n<Altitude updated successfully>\n");
                 }
             break;
             case 0:
@@ -732,7 +732,7 @@ void sortCache(Cache *cacheToSort, int arrayLength) {
         break;
         case 2: 
             cacheSortByState(cacheToSort, arrayLength);
-            printf("\n<Cache data sorted by state (alphabetycally)\n");
+            printf("\n<Cache data sorted by state (alphabetically)\n");
         break;
         case 3:
             cacheSortByDate(cacheToSort, arrayLength);
@@ -944,28 +944,29 @@ void getCacheM81(Cache *arrayOfCaches, int arrayLength) {
     }
 
     printf("\nThe M81 matrix for the caches is: \n");
-    printf("---------------------------------------------------------------------------------\n");
-    printf("|       |   1   |  1.5  |   2   |  2.5  |   3   |  3.5  |   4   |  4.5  |   5   |\n");
-    printf("---------------------------------------------------------------------------------\n");
+    printf("\n \t\t\t\t\t\t Terrain \n\n");
+    printf("\t\t---------------------------------------------------------------------------------\n");
+    printf("\t\t|       |   1   |  1.5  |   2   |  2.5  |   3   |  3.5  |   4   |  4.5  |   5   |\n");
+    printf("\t\t---------------------------------------------------------------------------------\n");
     
     for (int i = 0; i < 9; i++)
     {   
-        if (i == 0) printf("|   1   |");
-        if (i == 1) printf("|  1.5  |");
-        if (i == 2) printf("|   2   |");
-        if (i == 3) printf("|  2.5  |");
-        if (i == 4) printf("|   3   |");
-        if (i == 5) printf("|  3.5  |");
-        if (i == 6) printf("|   4   |");
-        if (i == 7) printf("|  4.5  |");
-        if (i == 8) printf("|   5   |");
+        if (i == 0) printf("\t\t|   1   |");
+        if (i == 1) printf("\t\t|  1.5  |");
+        if (i == 2) printf("\t\t|   2   |");
+        if (i == 3) printf("Difficulty\t|  2.5  |");
+        if (i == 4) printf("\t\t|   3   |");
+        if (i == 5) printf("\t\t|  3.5  |");
+        if (i == 6) printf("\t\t|   4   |");
+        if (i == 7) printf("\t\t|  4.5  |");
+        if (i == 8) printf("\t\t|   5   |");
         
         for (int j = 0; j < 9; j++)
         {
             printf(" %5d |",matrix[i][j]);
         }
         
-        printf("\n---------------------------------------------------------------------------------\n");
+        printf("\n\t\t---------------------------------------------------------------------------------\n");
     }
 }
 
